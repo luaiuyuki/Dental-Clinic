@@ -1,6 +1,18 @@
 <div align="center">
   <h1>🏥 Dental Clinic Management System</h1>
   <p><b>歯科医院管理システム</b></p>
+  
+  <!-- Tech Stack Badges -->
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
+    <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js" />
+    <img src="https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
+  </p>
+
   <p>A comprehensive, modern, and highly scalable web application for managing dental clinics efficiently.</p>
 </div>
 
@@ -23,22 +35,23 @@ This Dental Clinic Management System is designed to streamline day-to-day clinic
 - 📅 **Appointment Scheduling (予約管理):** Real-time booking and scheduling system.
 - 📊 **Dashboard & Analytics (分析ダッシュボード):** Comprehensive insights into clinic operations.
 
-## 💻 Technology Stack (技術スタック)
+## 💻 Technology Stack Details (技術スタック詳細)
 
 ### Frontend (フロントエンド)
-- **Framework:** Next.js / React
-- **Language:** JavaScript / TypeScript
-- **Styling:** CSS / Modern UI Libraries
+- **Framework:** Next.js (App Router API) / React 19
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS 4.0
 
 ### Backend (バックエンド)
 - **Environment:** Node.js
-- **Database:** SQLite
-- **Architecture:** RESTful API
+- **Framework:** Express.js
+- **Database:** SQLite (better-sqlite3)
+- **Security:** bcryptjs, jsonwebtoken
 
 ## 🚀 Getting Started (環境構築と実行)
 
 ### Prerequisites (前提条件)
-- Node.js (v18.0 or later)
+- Node.js (v20.0 or later recommended)
 - npm or yarn
 
 ### Installation (インストール手順)
@@ -54,7 +67,7 @@ This Dental Clinic Management System is designed to streamline day-to-day clinic
    cd server
    npm install
    # Create a .env file based on environment requirements
-   node app.js
+   npm run dev
    ```
 
 3. **Frontend Setup:**
