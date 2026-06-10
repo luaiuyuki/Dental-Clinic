@@ -165,6 +165,19 @@ export default function TaiKhoanPage() {
                 <input
                   type="text"
                   required
+                  minLength={3}
+                  maxLength={20}
+                  pattern="[a-zA-Z0-9_]+"
+                  onInvalid={(e) => {
+                    if (e.target.validity.valueMissing) {
+                      e.target.setCustomValidity('Vui lòng nhập tên đăng nhập');
+                    } else if (e.target.validity.patternMismatch) {
+                      e.target.setCustomValidity('Tên đăng nhập không chứa khoảng trắng hay ký tự đặc biệt');
+                    } else if (e.target.validity.tooShort) {
+                      e.target.setCustomValidity('Tên đăng nhập phải có ít nhất 3 ký tự');
+                    }
+                  }}
+                  onInput={(e) => e.target.setCustomValidity('')}
                   value={formData.tenDangNhap}
                   onChange={(e) => setFormData({ ...formData, tenDangNhap: e.target.value })}
                   className="w-full rounded border border-green-950 px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-950"
@@ -178,6 +191,15 @@ export default function TaiKhoanPage() {
                 <input
                   type="password"
                   required={!formData.id}
+                  minLength={6}
+                  onInvalid={(e) => {
+                    if (e.target.validity.valueMissing) {
+                      e.target.setCustomValidity('Vui lòng nhập mật khẩu');
+                    } else if (e.target.validity.tooShort) {
+                      e.target.setCustomValidity('Mật khẩu phải có ít nhất 6 ký tự');
+                    }
+                  }}
+                  onInput={(e) => e.target.setCustomValidity('')}
                   value={formData.matKhau}
                   onChange={(e) => setFormData({ ...formData, matKhau: e.target.value })}
                   className="w-full rounded border border-green-950 px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-950"
@@ -188,6 +210,8 @@ export default function TaiKhoanPage() {
                 <label className="mb-1 block text-sm font-medium text-gray-700">Vai Trò</label>
                 <select
                   required
+                  onInvalid={(e) => e.target.setCustomValidity('Vui lòng chọn vai trò')}
+                  onInput={(e) => e.target.setCustomValidity('')}
                   value={formData.vaiTro}
                   onChange={(e) => setFormData({ ...formData, vaiTro: e.target.value })}
                   className="w-full rounded border border-green-950 px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-950"
@@ -202,6 +226,8 @@ export default function TaiKhoanPage() {
                   <label className="mb-1 block text-sm font-medium text-gray-700">Liên Kết Hồ Sơ Nhân Viên <span className="text-gray-400 font-normal text-xs">(Xác Định Tài Khoản Này Thuộc Về Ai)</span></label>
                   <select
                     required
+                    onInvalid={(e) => e.target.setCustomValidity('Vui lòng chọn hồ sơ nhân viên')}
+                    onInput={(e) => e.target.setCustomValidity('')}
                     value={formData.bacSiId || ''}
                     onChange={(e) => setFormData({ ...formData, bacSiId: e.target.value })}
                     className="w-full rounded border border-green-950 px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-950"
@@ -221,6 +247,8 @@ export default function TaiKhoanPage() {
                   <label className="mb-1 block text-sm font-medium text-gray-700">Trạng Thái</label>
                   <select
                     required
+                    onInvalid={(e) => e.target.setCustomValidity('Vui lòng chọn trạng thái')}
+                    onInput={(e) => e.target.setCustomValidity('')}
                     value={formData.trangThai}
                     onChange={(e) => setFormData({ ...formData, trangThai: e.target.value })}
                     className="w-full rounded border border-green-950 px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-950"

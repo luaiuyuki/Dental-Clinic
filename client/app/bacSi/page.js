@@ -28,6 +28,7 @@ export default function BacSiPage() {
   const [form, setForm] = useState({ hoTen: '', chuyenKhoa: '', soDienThoai: '', email: '', luongCo: '', tyLeHoaHong: '', ngayBatDau: '', loaiNhanVien: 'bacSi', bangCap: 'cuNhan' })
   const [editId, setEditId] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
   const [caList, setCaList] = useState([])
   const [caLoading, setCaLoading] = useState(false)
   const [showCaModal, setShowCaModal] = useState(false)
@@ -37,15 +38,18 @@ export default function BacSiPage() {
   const loadNhanVien = () => { setLoading(true); api.get('/bacSi').then((r) => { setList(r.data); setLoading(false) }) }
   const loadCa = () => { setCaLoading(true); api.get('/caLamViec').then((r) => { setCaList(r.data); setCaLoading(false) }) }
   useEffect(() => { loadNhanVien(); loadCa() }, [])
-  const openAdd = () => { setForm({ hoTen: '', chuyenKhoa: '', soDienThoai: '', email: '', luongCo: '', tyLeHoaHong: '', ngayBatDau: '', loaiNhanVien: 'bacSi', bangCap: 'cuNhan' }); setEditId(null); setShowModal(true) }
-  const openEdit = (bs) => { setForm({ hoTen: bs.hoTen, chuyenKhoa: bs.chuyenKhoa || '', soDienThoai: bs.soDienThoai || '', email: bs.email || '', luongCo: bs.luongCo, tyLeHoaHong: bs.tyLeHoaHong, ngayBatDau: bs.ngayBatDau || '', loaiNhanVien: bs.loaiNhanVien || 'bacSi', bangCap: bs.bangCap || 'cuNhan' }); setEditId(bs.id); setShowModal(true) }
+  const openAdd = () => { setError(''); setForm({ hoTen: '', chuyenKhoa: '', soDienThoai: '', email: '', luongCo: '', tyLeHoaHong: '', ngayBatDau: '', loaiNhanVien: 'bacSi', bangCap: 'cuNhan' }); setEditId(null); setShowModal(true) }
+  const openEdit = (bs) => { setError(''); setForm({ hoTen: bs.hoTen, chuyenKhoa: bs.chuyenKhoa || '', soDienThoai: bs.soDienThoai || '', email: bs.email || '', luongCo: bs.luongCo, tyLeHoaHong: bs.tyLeHoaHong, ngayBatDau: bs.ngayBatDau || '', loaiNhanVien: bs.loaiNhanVien || 'bacSi', bangCap: bs.bangCap || 'cuNhan' }); setEditId(bs.id); setShowModal(true) }
   const handleSave = async (e) => {
     e.preventDefault()
     if (!form.hoTen.trim()) return alert('Vui Lòng Nhập Tên Nhân Viên')
     setSaving(true)
+    setError('')
     try {
       if (editId) { await api.put(`/bacSi/${editId}`, { ...form, trangThai: 'hoatDong' }) } else { await api.post('/bacSi', form) }
       setShowModal(false); loadNhanVien()
+    } catch (err) {
+      setError(err.response?.data?.error || 'Có lỗi xảy ra khi lưu nhân viên')
     } finally { setSaving(false) }
   }
   const handleDeactivate = async (id) => { if (!confirm('Ngừng Hoạt Động Nhân Viên Này?')) return; await api.delete(`/bacSi/${id}`); loadNhanVien() }
@@ -205,7 +209,18 @@ export default function BacSiPage() {
           <div className="bg-white border-2 border-green-950 rounded p-6 w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh]">
             <h2 className="mb-6 text-xl font-semibold text-gray-900">{editId ? 'Cập Nhật Nhân Viên' : 'Thêm Nhân Viên Mới'}</h2>
             <form onSubmit={handleSave} className="grid grid-cols-2 gap-4">
-              <div className="col-span-2"><label className={labelCls}>Họ & Tên *</label><input required className={inputCls} value={form.hoTen} onChange={f('hoTen')} placeholder="Nguyễn Văn A"/></div>
+              <div className="col-span-2">
+                <label className={labelCls}>Họ & Tên *</label>
+                <input 
+                  required 
+                  onInvalid={(e) => { if (e.target.validity.valueMissing) e.target.setCustomValidity('Vui Lòng Nhập Tên Nhân Viên') }}
+                  onInput={(e) => e.target.setCustomValidity('')}
+                  className={inputCls} 
+                  value={form.hoTen} 
+                  onChange={f('hoTen')} 
+                  placeholder="Nguyễn Văn A"
+                />
+              </div>
               <div className="col-span-2">
                 <label className={labelCls}>Loại Nhân Viên *</label>
                 <select className={inputCls} value={form.loaiNhanVien} onChange={f('loaiNhanVien')}>
@@ -219,12 +234,16 @@ export default function BacSiPage() {
                   {bangCapOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                 </select>
               </div>
-              <div><label className={labelCls}>Chuyên Khoa / Vai Trò *</label><input required className={inputCls} value={form.chuyenKhoa} onChange={f('chuyenKhoa')} placeholder="Phục Hình / Lễ Tân..."/></div>
-              <div><label className={labelCls}>Điện Thoại *</label><input required className={inputCls} value={form.soDienThoai} onChange={f('soDienThoai')} placeholder="09..."/></div>
-              <div><label className={labelCls}>Email *</label><input required className={inputCls} type="email" value={form.email} onChange={f('email')} placeholder="nv@example.com"/></div>
-              <div><label className={labelCls}>Ngày Bắt Đầu *</label><input required className={inputCls} type="date" value={form.ngayBatDau} onChange={f('ngayBatDau')}/></div>
-              <div><label className={labelCls}>Lương Cố Định * (₫)</label><input required className={inputCls} type="number" value={form.luongCo} onChange={f('luongCo')} placeholder="10000000"/></div>
-              <div><label className={labelCls}>Hoa Hồng * (%)</label><input required className={inputCls} type="number" value={form.tyLeHoaHong} onChange={f('tyLeHoaHong')} placeholder="0"/></div>
+              <div><label className={labelCls}>Chuyên Khoa / Vai Trò *</label><input required onInvalid={(e) => { if(e.target.validity.valueMissing) e.target.setCustomValidity('Vui lòng nhập chuyên khoa / vai trò') }} onInput={(e) => e.target.setCustomValidity('')} className={inputCls} value={form.chuyenKhoa} onChange={f('chuyenKhoa')} placeholder="Phục Hình / Lễ Tân..."/></div>
+              <div>
+                <label className={labelCls}>Điện Thoại *</label>
+                <input required maxLength={15} onInvalid={(e) => { if(e.target.validity.valueMissing) e.target.setCustomValidity('Vui lòng nhập số điện thoại') }} onInput={(e) => e.target.setCustomValidity('')} className={inputCls} value={form.soDienThoai} onChange={f('soDienThoai')} placeholder="09..."/>
+                {error && <p className="mt-1 text-xs font-medium text-red-600">{error}</p>}
+              </div>
+              <div><label className={labelCls}>Email *</label><input required onInvalid={(e) => { if(e.target.validity.valueMissing) e.target.setCustomValidity('Vui lòng nhập email'); else if(e.target.validity.typeMismatch) e.target.setCustomValidity('Vui lòng nhập đúng định dạng email') }} onInput={(e) => e.target.setCustomValidity('')} className={inputCls} type="email" value={form.email} onChange={f('email')} placeholder="nv@example.com"/></div>
+              <div><label className={labelCls}>Ngày Bắt Đầu *</label><input required onInvalid={(e) => { if(e.target.validity.valueMissing) e.target.setCustomValidity('Vui lòng chọn ngày bắt đầu') }} onInput={(e) => e.target.setCustomValidity('')} className={inputCls} type="date" value={form.ngayBatDau} onChange={f('ngayBatDau')}/></div>
+              <div><label className={labelCls}>Lương Cố Định * (₫)</label><input required onInvalid={(e) => { if(e.target.validity.valueMissing) e.target.setCustomValidity('Vui lòng nhập lương cố định') }} onInput={(e) => e.target.setCustomValidity('')} className={inputCls} type="number" value={form.luongCo} onChange={f('luongCo')} placeholder="10000000"/></div>
+              <div><label className={labelCls}>Hoa Hồng * (%)</label><input required onInvalid={(e) => { if(e.target.validity.valueMissing) e.target.setCustomValidity('Vui lòng nhập tỷ lệ hoa hồng') }} onInput={(e) => e.target.setCustomValidity('')} className={inputCls} type="number" value={form.tyLeHoaHong} onChange={f('tyLeHoaHong')} placeholder="0"/></div>
               <div className="col-span-2 flex justify-end gap-3 mt-4 pt-5 border-t border-gray-100">
                 <button type="button" onClick={() => setShowModal(false)} className="cursor-pointer px-4 py-2 rounded text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Hủy</button>
                 <button type="submit" disabled={saving} className="cursor-pointer rounded border-2 border-green-950 bg-green-950 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-white hover:text-green-950 disabled:opacity-50">
@@ -244,9 +263,9 @@ export default function BacSiPage() {
             </p>
             <form onSubmit={handleSaveCa} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div><label className={labelCls}>Giờ Bắt Đầu *</label><input required type="time" className={inputCls} value={caForm.gioBatDau} onChange={fc('gioBatDau')}/></div>
-                <div><label className={labelCls}>Giờ Kết Thúc *</label><input required type="time" className={inputCls} value={caForm.gioKetThuc} onChange={fc('gioKetThuc')}/></div>
-                <div className="col-span-2"><label className={labelCls}>Hệ Số Ca Làm Việc *</label><input required type="number" step="0.1" className={inputCls} value={caForm.heSo} onChange={fc('heSo')}/></div>
+                <div><label className={labelCls}>Giờ Bắt Đầu *</label><input required onInvalid={(e) => { if(e.target.validity.valueMissing) e.target.setCustomValidity('Vui lòng chọn giờ bắt đầu') }} onInput={(e) => e.target.setCustomValidity('')} type="time" className={inputCls} value={caForm.gioBatDau} onChange={fc('gioBatDau')}/></div>
+                <div><label className={labelCls}>Giờ Kết Thúc *</label><input required onInvalid={(e) => { if(e.target.validity.valueMissing) e.target.setCustomValidity('Vui lòng chọn giờ kết thúc') }} onInput={(e) => e.target.setCustomValidity('')} type="time" className={inputCls} value={caForm.gioKetThuc} onChange={fc('gioKetThuc')}/></div>
+                <div className="col-span-2"><label className={labelCls}>Hệ Số Ca Làm Việc *</label><input required onInvalid={(e) => { if(e.target.validity.valueMissing) e.target.setCustomValidity('Vui lòng nhập hệ số ca') }} onInput={(e) => e.target.setCustomValidity('')} type="number" step="0.1" className={inputCls} value={caForm.heSo} onChange={fc('heSo')}/></div>
               </div>
               <div className="flex justify-end gap-3 pt-5 border-t border-gray-100">
                 <button type="button" onClick={() => setShowCaModal(false)} className="cursor-pointer px-4 py-2 rounded text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Hủy</button>

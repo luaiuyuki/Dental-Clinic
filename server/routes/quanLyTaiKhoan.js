@@ -12,6 +12,9 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   const { tenDangNhap, matKhau, vaiTro, bacSiId } = req.body
   if (!tenDangNhap || !matKhau || !vaiTro) return res.status(400).json({ error: 'Thiếu Trường Bắt Buộc' })
+  if (tenDangNhap.length < 3 || tenDangNhap.length > 20) return res.status(400).json({ error: 'Tên Đăng Nhập Phải Từ 3 Đến 20 Ký Tự' })
+  if (!/^[a-zA-Z0-9_]+$/.test(tenDangNhap)) return res.status(400).json({ error: 'Tên Đăng Nhập Không Chứa Ký Tự Đặc Biệt Hay Khoảng Trắng' })
+  if (matKhau.length < 6) return res.status(400).json({ error: 'Mật Khẩu Phải Có Tối Thiểu 6 Ký Tự' })
   const exists = db.prepare('SELECT id FROM taiKhoan WHERE tenDangNhap = ?').get(tenDangNhap)
   if (exists) return res.status(400).json({ error: 'Tên Đăng Nhập Đã Tồn Tại' })
   if (bacSiId) {
@@ -24,10 +27,16 @@ router.post('/', (req, res) => {
 })
 router.put('/:id', (req, res) => {
   const { tenDangNhap, matKhau, vaiTro, bacSiId, trangThai } = req.body
+  
+  if (!tenDangNhap || !vaiTro) return res.status(400).json({ error: 'Thiếu Trường Bắt Buộc' })
+  if (tenDangNhap.length < 3 || tenDangNhap.length > 20) return res.status(400).json({ error: 'Tên Đăng Nhập Phải Từ 3 Đến 20 Ký Tự' })
+  if (!/^[a-zA-Z0-9_]+$/.test(tenDangNhap)) return res.status(400).json({ error: 'Tên Đăng Nhập Không Chứa Ký Tự Đặc Biệt Hay Khoảng Trắng' })
+
   const existing = db.prepare('SELECT * FROM taiKhoan WHERE id = ?').get(req.params.id)
   if (!existing) return res.status(404).json({ error: 'Tài Khoản Không Tồn Tại' })
   let newHash = existing.matKhau
   if (matKhau && matKhau.trim() !== '') {
+    if (matKhau.length < 6) return res.status(400).json({ error: 'Mật Khẩu Phải Có Tối Thiểu 6 Ký Tự' })
     newHash = hashSync(matKhau, 10)
   }
   const checkDuplicate = db.prepare('SELECT id FROM taiKhoan WHERE tenDangNhap = ? AND id != ?').get(tenDangNhap, req.params.id)

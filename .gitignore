@@ -1,0 +1,45 @@
+# Node / Dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Next.js
+.next/
+out/
+build/
+.vercel/
+
+# Environment variables
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+server/.env
+client/.env
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+server/clinic_v2.db*
+server/dentalClinic.db*
+
+# Logs
+error_log.txt
+*.log
+
+# Testing
+coverage/
+
+# OS / Editor
+.DS_Store
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

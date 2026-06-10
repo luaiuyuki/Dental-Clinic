@@ -2,7 +2,7 @@ import Database from 'better-sqlite3'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const dbPath = process.env.env === 'test' ? ':memory:' : join(__dirname, 'dentalClinic.db')
+const dbPath = process.env.env === 'test' ? ':memory:' : join(__dirname, 'clinic_v2.db')
 const db = new Database(dbPath)
 db.pragma('journal_mode = WAL')
 db.pragma('foreign_keys = ON')

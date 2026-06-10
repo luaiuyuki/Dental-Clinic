@@ -57,7 +57,7 @@ const tinhLuongBacSi = (bacSiId, thang, nam) => {
     const hEnd = parseInt(endParts[0]) + parseInt(endParts[1])/60
     const soGioMoiCa = Math.max(0, hEnd - hStart)
     const tongHeSoBenhNhan = hoSoByDate[dStr] || 0
-    const heSoVuotMuc = Math.max(0, (ca.heSo - 1) + tongHeSoBenhNhan)
+    const heSoVuotMuc = ca.heSo + tongHeSoBenhNhan
     soGioQuyDoi += soGioMoiCa * heSoVuotMuc
   }
   const tienLamThem = soGioQuyDoi * heSoBacSi * soTienMotGio

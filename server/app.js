@@ -17,7 +17,7 @@ import authRouter from './routes/auth.js'
 import aiRouter from './routes/ai.js'
 import { verifyToken } from './middleware/auth.js'
 const app = express()
-app.use(cors({ origin: 'http://localhost:3000' }))
+app.use(cors())
 app.use(json())
 app.use('/api/auth', authRouter)
 app.use(verifyToken)
@@ -35,6 +35,7 @@ app.use('/api/hoaDon', hoaDonRouter)
 app.use('/api/bacSi', bacSiRouter)
 app.use('/api/ai', aiRouter)
 app.use((err, req, res, next) => {
+  import('fs').then(fs => fs.appendFileSync('error_log.txt', new Date().toISOString() + ' - ' + err.message + '\n' + err.stack + '\n\n'));
   res.status(500).json({ error: err.message })
 })
 const PORT = process.env.port || 5000
