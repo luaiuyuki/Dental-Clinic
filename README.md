@@ -48,6 +48,42 @@ This Dental Clinic Management System is designed to streamline day-to-day clinic
 - **Database:** SQLite (better-sqlite3)
 - **Security:** bcryptjs, jsonwebtoken
 
+## 📂 Directory Structure (ディレクトリ構成)
+
+The project follows a modern structure, clearly separating the frontend interface from the backend API services.
+
+```text
+DentalClinic/
+├── client/                 # Frontend application (Next.js)
+│   ├── app/                # App Router: Pages & Layouts
+│   ├── components/         # Reusable UI components
+│   ├── lib/                # Utility functions (e.g., API config)
+│   └── (config files)      # next.config, postcss.config, etc.
+│
+├── server/                 # Backend application (Node.js/Express)
+│   ├── routes/             # API Endpoints
+│   ├── middleware/         # Custom Express middlewares
+│   ├── db.js               # Database connection logic
+│   ├── app.js              # Express application entry point
+│   └── (config files)      # .env, package.json, etc.
+│
+├── .gitignore              # Version control ignore list
+└── README.md               # Project documentation
+```
+
+### Key Modules & Functions (主要モジュールと機能)
+
+#### Frontend (`client/`)
+- **`app/bacSi/`**: Interface for Doctor management, displaying schedules and profiles.
+- **`app/taiKhoan/`**: Interface for Account management and access control.
+- **`lib/api.js`**: Centralized configurations for secure API calls to the backend.
+
+#### Backend (`server/`)
+- **`routes/bacSi.js`**: RESTful APIs for managing doctor records.
+- **`routes/bangLuong.js`**: Endpoints for payroll calculation and financial tracking.
+- **`routes/quanLyTaiKhoan.js`**: Authentication and user account management APIs.
+- **`db.js`**: Manages the SQLite database connection (`clinic_v2.db`), ensuring reliable data persistence.
+
 ## 🚀 Getting Started (環境構築と実行)
 
 ### Prerequisites (前提条件)
